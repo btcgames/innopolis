@@ -81,7 +81,7 @@ public class MyHashMap<K, V> implements Map<K, V> {
             quantityOfElements++;
             currentSizeOfArray++;
 
-            if(buckets.length == currentSizeOfArray) {
+            if (buckets.length == currentSizeOfArray) {
                 resize();
             }
 
@@ -106,10 +106,10 @@ public class MyHashMap<K, V> implements Map<K, V> {
     private void resize() {
         quantityOfElements = 0;
         int newSize = buckets.length * 2;
-        Node<K,V>[] tempBuckets = buckets;
+        Node<K, V>[] tempBuckets = buckets;
         buckets = (Node<K, V>[]) new Node[newSize];
-        for(int i = 0; i < tempBuckets.length; i++) {
-            Node<K,V> tempNode = tempBuckets[i];
+        for (int i = 0; i < tempBuckets.length; i++) {
+            Node<K, V> tempNode = tempBuckets[i];
             while (tempNode != null) {
                 put(tempNode.key, tempNode.value);
                 tempNode = tempNode.next;
