@@ -12,11 +12,9 @@ import java.util.Objects;
 public class QuickSort implements Sort {
 
     public void sort(Person[] person) {
-        long begin = System.currentTimeMillis();
         Comparator<Person> comparator = new BySexComparator().thenComparing(new ByAgeComparator()).thenComparing(new ByAlphabetComparator());
         quickSort(person, 0, person.length - 1, comparator);
-        long end = System.currentTimeMillis();
-        System.out.println("Время работы(мс): " + (end - begin));
+
     }
 
     public static void quickSort(Person[] array, int left, int right, Comparator<Person> comparator) {
@@ -32,15 +30,6 @@ public class QuickSort implements Sort {
         int partitionIndex = left;
 
         for (int i = left; i < right; i++) {
-
-            if(Objects.equals(array[i].getName(), pivot.getName()) &&
-                    array[i].getAge() == pivot.getAge()) {
-                try {
-                    throw new NameAgeException("Имена людей и возраст совпадают");
-                } catch (NameAgeException e) {
-                    e.printStackTrace();
-                }
-            }
 
             if (comparator.compare(array[i], pivot) < 0) {
                 swap(array, i, partitionIndex);

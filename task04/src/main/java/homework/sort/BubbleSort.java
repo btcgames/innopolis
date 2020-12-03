@@ -14,19 +14,9 @@ public class BubbleSort implements Sort {
     public void sort(Person[] person) {
         Comparator<Person> comparator = new BySexComparator().thenComparing(new ByAgeComparator()).thenComparing(new ByAlphabetComparator());
 
-        long begin = System.currentTimeMillis();
         for(int i = 0; i < person.length; i++) {
             for(int j = 0; j < person.length; j++) {
                 if(comparator.compare(person[i], person[j]) < 0) {
-
-                    if(Objects.equals(person[i].getName(), person[j].getName()) &&
-                    person[i].getAge() == person[j].getAge()) {
-                        try {
-                            throw new NameAgeException("Имена людей и возраст совпадают");
-                        } catch (NameAgeException e) {
-                            e.printStackTrace();
-                        }
-                    }
 
                     Person temp = person[i];
                     person[i] = person[j];
@@ -34,7 +24,5 @@ public class BubbleSort implements Sort {
                 }
             }
         }
-        long end = System.currentTimeMillis();
-        System.out.println("Время работы(мс): " + (end - begin));
     }
 }
