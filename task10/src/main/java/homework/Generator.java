@@ -5,61 +5,67 @@ public class Generator {
     private Field field;
 
     public Generator() {
-        field = new Field(30);
-        field.init();
+        field = new Field(50);
+        field.initRandom();
     }
 
     public void generateWithThreads(int steps) throws InterruptedException {
         System.out.println("Many threads");
-        getField().print();
         for (int i = 0; i < steps; i++) {
-            setAndPrintMatrix();
+            field.print();
+            setMatrix();
         }
     }
 
-    private void setAndPrintMatrix() throws InterruptedException {
-        char[][] newMatrix = new Field(field.getSIZE()).getMatrix();
-        for (int row = 0; row < field.getSIZE(); row++) {
-            newMatrix[row] = getRow(row);
+    private void setMatrix() throws InterruptedException {
+        char[][] newMatrix = new Field(field.getSize()).getMatrix();
+        Thread[] threads = new Thread[field.getSize()];
+        for (int row = 0; row < field.getSize(); row++) {
+            int finalRow = row;
+            threads[row] = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        newMatrix[finalRow] = getRow(finalRow);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            threads[row].start();
+        }
+        for (int row = 0; row < field.getSize(); row++) {
+            threads[row].join();
         }
         field.setMatrix(newMatrix);
-        field.print();
     }
 
     private char[] getRow(int row) throws InterruptedException {
-        char[] array = new char[field.getSIZE()];
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (new Object()) {
-                    for (int col = 0; col < field.getSIZE(); col++) {
-                        if (isAlive(field.getMatrix(), row, col)) {
-                            array[col] = Field.ELEM;
-                        } else {
-                            array[col] = Field.EMPTY;
-                        }
-                    }
-                }
+        char[] array = new char[field.getSize()];
+
+        for (int col = 0; col < field.getSize(); col++) {
+            if (isAlive(field.getMatrix(), row, col)) {
+                array[col] = Field.ELEM;
+            } else {
+                array[col] = Field.EMPTY;
             }
-        });
-        thread.start();
-        thread.join();
+        }
+
         return array;
     }
 
     public void generate(int steps) {
         System.out.println("One thread");
-        getField().print();
         for (int i = 0; i < steps; i++) {
-            generate();
             getField().print();
+            generate();
         }
     }
 
     private void generate() {
-        char[][] newMatrix = new Field(field.getSIZE()).getMatrix();
-        for (int i = 0; i < field.getSIZE(); i++) {
-            for (int j = 0; j < field.getSIZE(); j++) {
+        char[][] newMatrix = new Field(field.getSize()).getMatrix();
+        for (int i = 0; i < field.getSize(); i++) {
+            for (int j = 0; j < field.getSize(); j++) {
                 if (isAlive(field.getMatrix(), i, j)) {
                     newMatrix[i][j] = Field.ELEM;
                 }

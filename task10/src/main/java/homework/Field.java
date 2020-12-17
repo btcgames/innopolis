@@ -11,13 +11,14 @@ public class Field {
 
     public Field(int size) {
         matrix = new char[size][size];
+        initEmpty();
     }
 
     public Field(char[][] matrix) {
         this.matrix = matrix;
     }
 
-    public void init() {
+    public void initRandom() {
         Random random = new Random();
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix.length; j++) {
@@ -44,7 +45,7 @@ public class Field {
         System.out.println();
     }
 
-    public int getSIZE() {
+    public int getSize() {
         return matrix.length;
     }
 
